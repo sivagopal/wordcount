@@ -1,5 +1,7 @@
 package com.rbs.service;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +16,21 @@ public class WordCountService {
     private TranslaterService translaterService;
 
     public boolean addWord(String word) {
-        Pattern p = Pattern.compile("[^a-zA-Z]");
-        boolean isAlphabetic = p.matcher(word).find();
-        if (isAlphabetic) return false;
+
+        if (StringUtils.isBlank(word) || !checkAlphabetic(word)) {
+            return false;
+        }
         words.add(word);
+        return true;
+    }
+
+    private boolean checkAlphabetic(String input) {
+        for (int i = 0; i != input.length(); ++i) {
+            if (!Character.isLetter(input.charAt(i))) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -27,6 +40,9 @@ public class WordCountService {
 
     public int countWord(String word) {
         Map<String, Integer> wordCountMap = new HashMap<>();
+        if (StringUtils.isBlank(word) ) {
+            return 0;
+        }
         String translatedWord = translate(word);
         Integer currentCount = wordCountMap.get(translatedWord);
         for (String wordFromList : words) {

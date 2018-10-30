@@ -26,6 +26,11 @@ public class WordCountServiceTest {
         when(translaterService.translate("bloom")).thenReturn("flower");
         when(translaterService.translate("test")).thenReturn("test");
         when(translaterService.translate("tester")).thenReturn("tester");
+
+        when(translaterService.translate("hello")).thenReturn("hello");
+        when(translaterService.translate("hola")).thenReturn("hello");
+
+
         wordCountService.setTranslaterService(translaterService);
     }
 
@@ -83,7 +88,7 @@ public class WordCountServiceTest {
     }
 
     @Test
-    public void testCountAllWordsExistsInDifferentLanguageForAGivenWord() throws Exception {
+    public void testCountAllWordsExistsInDifferentLanguageForAGivenWord() {
         wordCountService.addWord("flower");
         wordCountService.addWord("flor");
         wordCountService.addWord("bloom");
@@ -103,4 +108,16 @@ public class WordCountServiceTest {
         assertTrue(wordCountService.getWords().contains("flower"));
     }
 
+    @Test
+    public void testNullOrBlankWordCountToReturnZero() {
+        assertEquals(0, wordCountService.countWord(""));
+        assertEquals(0, wordCountService.countWord(null));
+        assertEquals(false, wordCountService.addWord(""));
+        assertEquals(0, wordCountService.countWord(""));
+        assertEquals(false, wordCountService.addWord(""));
+        assertEquals(0, wordCountService.countWord(""));
+
+        //Integrate test
+        assertEquals(0, wordCountService.getSize());
+    }
 }
